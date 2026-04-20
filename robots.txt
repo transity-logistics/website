@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://transitylogistics.com/sitemap.xml
+Sitemap: https://www.transitylogistics.com/sitemap.xml
