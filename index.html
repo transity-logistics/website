@@ -38,13 +38,14 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
-<!-- End Google Tag Manager -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C2CJHD6TVV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-C2CJHD6TVV');
+</script>
 
 <!-- Meta Pixel Code -->
 <script>
@@ -1196,11 +1197,6 @@ footer.foot {
 </head>
 <body>
 
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
 <!-- ────────── TICKER ────────── -->
 <div class="ticker" aria-hidden="true">
   <div class="ticker__track" id="ticker">
@@ -2008,8 +2004,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </a>
 
 <script>
-/* ── Analytics helper: push events to GTM dataLayer + Meta Pixel ── */
-window.dataLayer = window.dataLayer || [];
+/* ── Analytics helper: fires to GA4 (gtag) + Meta Pixel (fbq) ── */
 var FB_EVENT_MAP = {
   generate_lead: 'Lead',
   form_submit:   'SubmitApplication',
@@ -2020,8 +2015,7 @@ var FB_EVENT_MAP = {
 };
 function track(name, params) {
   try {
-    var payload = Object.assign({ event: name }, params || {});
-    window.dataLayer.push(payload);
+    if (typeof gtag === 'function') gtag('event', name, params || {});
   } catch (e) {}
   try {
     if (typeof fbq === 'function' && FB_EVENT_MAP[name]) {
