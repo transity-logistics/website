@@ -1223,6 +1223,7 @@ footer.foot {
   border-radius: 6px;
   box-shadow: 0 24px 70px rgba(14, 14, 13, .55);
   background: var(--paper);
+  cursor: pointer;
 }
 .promo__close {
   position: absolute; top: -14px; right: -14px;
@@ -1246,7 +1247,7 @@ footer.foot {
 <div class="promo" id="promoModal" role="dialog" aria-modal="true" aria-label="Filing deadlines &amp; updates">
   <div class="promo__dialog">
     <button class="promo__close" id="promoClose" type="button" aria-label="Close">&times;</button>
-    <img class="promo__img" src="/promo-updates.png" alt="FMCSA MOTUS platform setup, IRS Form 2290 for 2026–2027 has started, and IFTA tax 2nd quarter 2026 is due now." />
+    <img class="promo__img" id="promoImg" src="/promo-updates.png" role="button" tabindex="0" data-wa-source="promo_modal" alt="FMCSA MOTUS platform setup, IRS Form 2290 for 2026–2027 has started, and IFTA tax 2nd quarter 2026 is due now. Tap to chat with us on WhatsApp." />
   </div>
 </div>
 
@@ -2270,6 +2271,17 @@ document.querySelectorAll('.mobile-nav a').forEach(function (a) {
   // click on the backdrop (outside the dialog) closes
   modal.addEventListener('click', function (e) {
     if (!dialog.contains(e.target)) close();
+  });
+
+  // clicking the banner opens WhatsApp, then closes the modal
+  var img = document.getElementById('promoImg');
+  function goWA() {
+    startWA("Hi Transity, I saw your filing updates (FMCSA MOTUS setup, IRS 2290 for 2026–2027, IFTA Q2 2026). I'd like help staying compliant.");
+    close();
+  }
+  img.addEventListener('click', goWA);
+  img.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goWA(); }
   });
   // Escape closes
   document.addEventListener('keydown', function (e) {
