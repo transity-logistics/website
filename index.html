@@ -1193,9 +1193,62 @@ footer.foot {
   * { animation-duration: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0s !important; }
   html { scroll-behavior: auto; }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Promo modal
+   ───────────────────────────────────────────────────────────── */
+.promo {
+  position: fixed; inset: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--gutter);
+  background: rgba(14, 14, 13, .72);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  opacity: 0; visibility: hidden;
+  transition: opacity .3s ease, visibility .3s ease;
+}
+.promo.open { opacity: 1; visibility: visible; }
+.promo__dialog {
+  position: relative;
+  width: min(920px, 100%);
+  max-height: calc(100vh - var(--gutter) * 2);
+  transform: translateY(12px) scale(.98);
+  transition: transform .3s cubic-bezier(.2,.65,.2,1);
+}
+.promo.open .promo__dialog { transform: none; }
+.promo__img {
+  width: 100%; height: auto;
+  max-height: calc(100vh - var(--gutter) * 2);
+  object-fit: contain;
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  box-shadow: 0 24px 70px rgba(14, 14, 13, .55);
+  background: var(--paper);
+}
+.promo__close {
+  position: absolute; top: -14px; right: -14px;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--rule-strong);
+  font-family: var(--mono); font-size: 18px; line-height: 1;
+  box-shadow: 0 6px 20px rgba(14, 14, 13, .4);
+  transition: transform .18s ease, background .18s ease;
+}
+.promo__close:hover { transform: scale(1.08); background: var(--amber); }
+@media (max-width: 560px) {
+  .promo__close { top: 8px; right: 8px; }
+}
 </style>
 </head>
 <body>
+
+<!-- ────────── PROMO MODAL ────────── -->
+<div class="promo" id="promoModal" role="dialog" aria-modal="true" aria-label="Filing deadlines &amp; updates">
+  <div class="promo__dialog">
+    <button class="promo__close" id="promoClose" type="button" aria-label="Close">&times;</button>
+    <img class="promo__img" src="/promo-updates.png" alt="FMCSA MOTUS platform setup, IRS Form 2290 for 2026–2027 has started, and IFTA tax 2nd quarter 2026 is due now." />
+  </div>
+</div>
 
 <!-- ────────── TICKER ────────── -->
 <div class="ticker" aria-hidden="true">
@@ -2196,6 +2249,35 @@ document.addEventListener('click', function (e) {
 document.querySelectorAll('.mobile-nav a').forEach(function (a) {
   a.addEventListener('click', function () { document.getElementById('mnav').classList.remove('open'); });
 });
+
+/* ── Promo modal: open on load, close on ✕ / outside click / Esc ── */
+(function () {
+  var modal = document.getElementById('promoModal');
+  if (!modal) return;
+  var dialog = modal.querySelector('.promo__dialog');
+
+  function open() {
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    track('promo_view', { promo: 'filing_updates' });
+  }
+  function close() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('promoClose').addEventListener('click', close);
+  // click on the backdrop (outside the dialog) closes
+  modal.addEventListener('click', function (e) {
+    if (!dialog.contains(e.target)) close();
+  });
+  // Escape closes
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('open')) close();
+  });
+
+  open();
+})();
 </script>
 </body>
 </html>
